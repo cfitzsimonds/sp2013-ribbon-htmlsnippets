@@ -44,7 +44,8 @@ Hcf.RibbonActions = Hcf.RibbonActions || {};  // Module specific namespace
 	function getReusableContent(callback) {
 		var ctx = new SP.ClientContext.get_current(),
 			web = ctx.get_web(),
-			oList = web.get_lists().getByTitle('Reusable Content'),
+			//oList = web.get_lists().getByTitle('Reusable Content'),
+            oList = web.get_lists().getByTitle('Script Content'),
 			oListItems,
 			oListItem,
 			caml = new SP.CamlQuery(),
@@ -74,7 +75,8 @@ Hcf.RibbonActions = Hcf.RibbonActions || {};  // Module specific namespace
 					if (showInRibbon) {
 						results.push({
 							Title: oListItem.get_item('Title'),
-							ReusableHtml: oListItem.get_item('ReusableHtml')
+						    //ReusableHtml: oListItem.get_item('ReusableHtml')
+							ReusableHtml: oListItem.get_item('ReusableScript')
 
 						});
 					}
@@ -204,22 +206,28 @@ Hcf.RibbonActions = Hcf.RibbonActions || {};  // Module specific namespace
 	* @returns {boolean} Whether page is in edit mode or not
 	*/
 	function isEditMode() {
-		var elDesignMode, elWikiMode,
-			inDesignMode, inWikiPageMode;
+	    var elDesignMode, elWikiMode, elEditMode,
+			inDesignMode, inWikiPageMode, inEditMode, pageUrl;
 
 		elDesignMode = document.getElementById('MSOLayout_InDesignMode');
 		elWikiMode = document.getElementById('_wikiPageMode');
+		pageUrl = window.location.href;
 
 		if (elDesignMode !== null) {
-			inDesignMode = (elDesignMode.value === '1');
+			inDesignMode = (elDesignMode.value == 1);
 		}
 
 		if (elWikiMode !== null) {
 			inWikiPageMode = (elWikiMode.value === 'Edit');
 		}
 
+		if (pageUrl.indexOf("EditForm.aspx") > -1)
+		{
+		    inEditMode = true;
+		}
+
 		// We are in edit mode if either design mode or wiki page mode are active
-		return (inDesignMode || inWikiPageMode);
+		return (inDesignMode || inWikiPageMode || inEditMode);
 	}
 
 
